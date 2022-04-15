@@ -1,4 +1,8 @@
 import discord
+import json
+
+with open('auth.json') as auth:
+    data = json.load(auth)
 
 client = discord.Client()
 
@@ -14,4 +18,4 @@ async def on_message(message):
     if message.content.startswith('$hello'):
         await message.channel.send('Hello!')
 
-client.run('token')
+client.run(data['bot token'])
