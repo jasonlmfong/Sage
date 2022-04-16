@@ -1,7 +1,7 @@
 import discord
 import json
 import logging
-
+import random
 
 #open json file for the auth tokens
 with open('auth.json') as auth:
@@ -33,11 +33,25 @@ logger.addHandler(handler)
 
 @client.event
 async def on_message(message):
+    logger.info(message)
+
+##for other logs use the following
+##logger.error(f"error happened heres the message {message}")
+
+
+#roll a die
+@client.event
+async def on_message(message):
     if message.author == client.user:
         return
-    else:
-        logger.info(message)
-##logger.error(f"error happened heres the message {message}")
+    if message.content.startswith('$d'):
+        max = message.content[2:]
+        if max.isnumeric() and int(max) > 0:
+            outcome = random.randint(1, int(max))
+            await message.channel.send(f'rolled a d{max}, outcome is {outcome}')
+        else:
+            await message.channel.send(f'{max} is not a value number of sides of a die')
+
 
 
 #run the bot using token
