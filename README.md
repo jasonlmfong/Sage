@@ -1,5 +1,7 @@
-# Boop
+# Sage
 General purpose Discord bot
+
+*Work in progress*
 
 #Setup
 follow this link to create a bot account and add to your server
