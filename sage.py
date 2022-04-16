@@ -52,6 +52,16 @@ async def on_message(message):
         else:
             await message.channel.send(f'{max} is not a value number of sides of a die')
 
+#flip a coin
+@client.event
+async def on_message(message):
+    if message.author == client.user:
+        return
+    if message.content.startswith('$coin'):
+        outcome = random.randint(1, 2)
+        coin = {1: 'heads', 2: 'tails'}
+        await message.channel.send(f'Coin returned {coin[outcome]}')
+
 
 
 #run the bot using token
