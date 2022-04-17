@@ -4,6 +4,8 @@ import logging
 import random
 import psycopg2
 from datetime import datetime
+import requests
+
 
 # open json file for the auth tokens
 with open('auth.json') as auth:
@@ -70,6 +72,23 @@ async def on_message(message):
         coin = {1: 'heads', 2: 'tails'}
         await message.channel.send(f'Coin returned {coin[outcome]}')
     
+    #get a user's rolesZ
+    if message.content.startswith('$roles'):
+        await message.channel.send(message.author.roles)
+
+    #get weather using weather API
+    if message.content.startswith('$weather'):
+        weather_key = tokens['weather']
+        location = message.content[9:]
+        response = requests.get('http://api.weatherapi.com/v1/current.json?key='+weather_key+'&q='+location)
+        weather = response.json()
+
+        loc_name = weather['location']['name']
+        cond = weather['current']['condition']['text']
+        temp = weather['current']['temp_c']
+        
+        await message.channel.send(f'weather report \\n {loc_name} \
+            \\n {cond}, {temp}')
 
 #run the bot using token
 client.run(tokens['bot token'])
