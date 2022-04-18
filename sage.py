@@ -106,6 +106,7 @@ async def on_message(message):
         quer = message.content[5:]
         if quer == '': 
             await message.channel.send('invalid search result')
+            return
         params = {
             "q": quer,
             "tbm": "isch",
@@ -118,6 +119,28 @@ async def on_message(message):
 
         embedmsg=discord.Embed(title=f"Image search for: {quer}", description=f"{message.author} \
             {images_results[0]['original']}" , color=0xFF5733)
+
+        await message.channel.send(embed=embedmsg)
+
+    #get a random google image among the top 100 images using serp API 
+    if message.content.startswith('$rimg'):
+        quer = message.content[6:]
+        if quer == '': 
+            await message.channel.send('invalid search result')
+            return
+        params = {
+            "q": quer,
+            "tbm": "isch",
+            "ijn": "0",
+            "api_key": tokens['serp']
+            }
+        search = GoogleSearch(params)
+        results = search.get_dict()
+        images_results = results['images_results']
+        outcome = random.randint(0, 99)
+
+        embedmsg=discord.Embed(title=f"Image search for: {quer}", description=f"{message.author} \
+            {images_results[outcome]['original']}" , color=0xFF5733)
 
         await message.channel.send(embed=embedmsg)
 
