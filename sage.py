@@ -72,7 +72,7 @@ async def on_message(message):
         coin = {1: 'heads', 2: 'tails'}
         await message.channel.send(f'Coin returned {coin[outcome]}')
     
-    #get a user's rolesZ
+    #get a user's roles
     if message.content.startswith('$roles'):
         await message.channel.send(message.author.roles)
 
@@ -84,11 +84,20 @@ async def on_message(message):
         weather = response.json()
 
         loc_name = weather['location']['name']
+        loc_count = weather['location']['country']
         cond = weather['current']['condition']['text']
         temp = weather['current']['temp_c']
+        wind_dr = weather['current']['wind_dir']
+        wind_spd = weather['current']['wind_kph']
+        percip = weather['current']['precip_mm']
         
-        await message.channel.send(f'weather report \\n {loc_name} \
-            \\n {cond}, {temp}')
+        embedmsg=discord.Embed(title="Weather Report", description=f"{loc_name}, {loc_count} ```Weather is {cond}, with temperature at {temp}C. \
+                                With wind at {wind_spd} kmph blowing {wind_dr}. \
+                                total percipitation is {percip}mm.```" , color=0xFF5733)
+
+        await message.channel.send(embed=embedmsg)
+
+
 
 #run the bot using token
 client.run(tokens['bot token'])
