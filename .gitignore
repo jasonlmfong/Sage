@@ -1,4 +1,4 @@
 *.log
 auth.json
-
+__pycache__
 images/fig.png
