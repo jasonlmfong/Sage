@@ -9,7 +9,7 @@ import requests
 from serpapi import GoogleSearch
 from twelvedata import TDClient
 import os
-
+import matplotlib.pyplot as plt
 
 
 # open json file for the auth tokens
@@ -163,13 +163,15 @@ async def on_message(message):
 
         if not os.path.exists("images"):
             os.mkdir("images")
+        
+        #Returns Matplotlib figure
+        pl = ts.as_pyplot_figure()
+        plt.savefig("images/fig.png")
+        
 
-        # Returns OHLCV + EMA(close, 7) + MAMA(close, 0.5, 0.05) + MOM(close, 9) + MACD(close, 12, 26, 9)
-        ts.with_ema(time_period=7).with_mama().with_mom().with_macd().as_plotly_figure().write_image("images/fig.png")
-
-        file = discord.File("images/fig.png", filename="fig.png")
         embedmsg=discord.Embed(title=f"Stock search for: {quer}", description=f"{message.author}" , color=0xFF5733)
-        embedmsg.set_image(url="attachment://fig.png")
+        file = discord.File("images/fig.png", filename="image.png")
+        embedmsg.set_image(url="attachment://image.png")
         await message.channel.send(file=file, embed=embedmsg)
 
 #run the bot using token
