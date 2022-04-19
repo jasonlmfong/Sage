@@ -7,6 +7,9 @@ import psycopg2
 from datetime import datetime
 import requests
 from serpapi import GoogleSearch
+from twelvedata import TDClient
+import os
+
 
 
 # open json file for the auth tokens
@@ -143,6 +146,31 @@ async def on_message(message):
             {images_results[outcome]['original']}" , color=0xFF5733)
 
         await message.channel.send(embed=embedmsg)
+
+    #get stocks data using twelvedata API + Python package
+    if message.content.startswith('$stock'):
+        quer = message.content[7:]
+        if quer == '': 
+            await message.channel.send('invalid search result')
+            return
+
+        td = TDClient(apikey=tokens['12data'])
+        ts = td.time_series(
+            symbol=quer,
+            outputsize=50,
+            interval="1week",
+        )
+
+        if not os.path.exists("images"):
+            os.mkdir("images")
+
+        # Returns OHLCV + EMA(close, 7) + MAMA(close, 0.5, 0.05) + MOM(close, 9) + MACD(close, 12, 26, 9)
+        ts.with_ema(time_period=7).with_mama().with_mom().with_macd().as_plotly_figure().write_image("images/fig.png")
+
+        file = discord.File("images/fig.png", filename="fig.png")
+        embedmsg=discord.Embed(title=f"Stock search for: {quer}", description=f"{message.author}" , color=0xFF5733)
+        embedmsg.set_image(url="attachment://fig.png")
+        await message.channel.send(file=file, embed=embedmsg)
 
 #run the bot using token
 client.run(tokens['bot token'])
