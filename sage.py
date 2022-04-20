@@ -122,6 +122,7 @@ async def on_message(message):
 
         embedmsg=discord.Embed(title=f"Image search for: {quer}", description=f"{message.author} \
             {images_results[0]['original']}" , color=0xFF5733)
+        embedmsg.set_image(url=images_results[0]['original'])
 
         await message.channel.send(embed=embedmsg)
 
@@ -144,6 +145,7 @@ async def on_message(message):
 
         embedmsg=discord.Embed(title=f"Image search for: {quer}", description=f"{message.author} \
             {images_results[outcome]['original']}" , color=0xFF5733)
+        embedmsg.set_image(url=images_results[outcome]['original'])
 
         await message.channel.send(embed=embedmsg)
 
